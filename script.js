@@ -31,19 +31,25 @@ function addBookToLibrary() {
 
   const submitButton = document.querySelector('.submit-form');
   submitButton.addEventListener('click', () => {
-    const title = document.getElementById('title').value;
-    const author = document.getElementById('author').value;
-    const years = document.getElementById('years').value;
-    const pages = document.getElementById('pages').value;
-    const read = document.getElementById('read').checked;
+    let title = document.getElementById('title').value;
+    let author = document.getElementById('author').value;
+    let years = document.getElementById('years').value;
+    let pages = document.getElementById('pages').value;
+    let read = document.getElementById('read').checked;
     const id = Number(new Date());
 
     const book = new Book(title, author, years, pages, read, id);
     myLibrary.push(book);
 
     bookForm.classList.remove('form-display');
-    kerangkaElemenBuku(book);
+    makeBookElements(book);
     localStorage.setItem(storageKey, JSON.stringify(myLibrary));
+
+    document.getElementById('title').value = '';
+    document.getElementById('author').value = '';
+    document.getElementById('years').value = '';
+    document.getElementById('pages').value = '';
+    document.getElementById('read').checked = false;
   });
 
   const cancelButton = document.querySelector('.cancel-form');
@@ -54,29 +60,29 @@ function addBookToLibrary() {
   displayTheBook();
 }
 
-function kerangkaElemenBuku(buku) {
+function makeBookElements(book) {
   const container = document.getElementById('container');
   const card = document.createElement('div');
   const title = document.createElement('p');
   const author = document.createElement('p');
-  const year = document.createElement('p');
+  const years = document.createElement('p');
   const pages = document.createElement('p');
   const remove = document.createElement('button');
   const read = document.createElement('button');
 
   card.classList.add('card');
-  card['bookId'] = buku.id;
-  const bookIndex = myLibrary.indexOf(buku);
+  card['bookId'] = book.id;
+  const bookIndex = myLibrary.indexOf(book);
   card.setAttribute('data-index-number', `${bookIndex}`);
   remove.classList.add('remove-button');
   read.classList.add('read-button');
 
-  title.textContent = `Judul Buku ${buku.title}`;
-  author.textContent = `Penulis Buku ${buku.author}`;
-  year.textContent = `Tahun Diterbitkan ${buku.year}`;
-  pages.textContent = `Jumlah Halaman ${buku.pages}`;
+  title.textContent = `Judul Buku ${book.title}`;
+  author.textContent = `Penulis Buku ${book.author}`;
+  years.textContent = `Tahun Diterbitkan ${book.years}`;
+  pages.textContent = `Jumlah Halaman ${book.pages}`;
 
-  if (buku.read) {
+  if (book.read) {
     card.style.border = '1px solid green';
     read.textContent = 'Belum selesai';
   } else {
@@ -86,7 +92,7 @@ function kerangkaElemenBuku(buku) {
 
   remove.textContent = 'Hapus';
 
-  card.append(title, author, year, pages, remove, read);
+  card.append(title, author, years, pages, remove, read);
   container.appendChild(card);
   removeTheBook(card);
   changeReadStatus(card);
@@ -124,6 +130,6 @@ function changeReadStatus(book) {
 
 function displayTheBook() {
   for (let i = 0; i < myLibrary.length; i++) {
-    kerangkaElemenBuku(myLibrary[i]);
+    makeBookElements(myLibrary[i]);
   }
 }
